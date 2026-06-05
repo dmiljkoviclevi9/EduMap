@@ -122,13 +122,13 @@ $CAPP     = "edumap-app"
   - Verify: `az webapp deploy` ends with `Status: Success` (or the JSON deployment record shows `"status": 4`).
   - Shortcut alternative (skips the zip dance entirely): `az webapp up -g $RG -n $APP --runtime "DOTNETCORE:10.0" --os-type Linux --plan $PLAN --sku F1` from `src/EduMap.Api/`. It builds, zips, and deploys in one shot using Microsoft's own (correct) zipper. Less educational; useful if you've already done the manual path once.
   - Note: on PowerShell 7+ (`pwsh`), `[System.IO.Compression.ZipFile]::CreateFromDirectory` works correctly out of the box (.NET 6+ uses forward slashes per zip spec). The loop above is only required for Windows PowerShell 5.1, which ships with every Windows by default.
-- [ ] **Hit the public URL**
+- [x] **Hit the public URL**
   - Do: open `https://$APP.azurewebsites.net/` in phone + desktop browsers
   - Verify: map renders, click works on touch + click
-- [ ] **Hit `/health` over the public URL**
+- [x] **Hit `/health` over the public URL**
   - Do: `curl https://$APP.azurewebsites.net/health`
   - Verify: `{"status":"Healthy"}` and HTTP 200
-- [ ] **Watch the log stream**
+- [x] **Watch the log stream**
   - Do: `az webapp log tail -g $RG -n $APP` (or VS Code → "Start Streaming Logs")
   - Verify: see `Loaded 246 countries` after each deploy/restart, see `Country clicked: XX` lines as you tap countries from a phone
 
@@ -224,12 +224,12 @@ The UAMI path is the modern recommended pattern. **Note for Levi9 / corporate te
 
 #### GitHub side
 
-- [ ] **First commit** (if not already pushed)
+- [x] **First commit** (if not already pushed)
   - Do: `git add -A; git commit -m "Initial Edu-Map foundation"; git push -u origin main`
-- [ ] **Create the `production` environment** (referenced by the deploy job)
+- [x] **Create the `production` environment** (referenced by the deploy job)
   - Do: GitHub → Settings → Environments → New environment → name `production` → Configure environment → Save
   - Verify: environment listed; no protection rules required (optional: add "Required reviewers" for a real prod gate later)
-- [ ] **Add four repo variables** (no secrets needed — these are all just identifiers; the trust is established by federation)
+- [x] **Add four repo variables** (no secrets needed — these are all just identifiers; the trust is established by federation)
   - Do: GitHub → Settings → Secrets and variables → Actions → **Variables** tab → New repository variable
   - Add these four (values from the Azure CLI outputs above):
 
@@ -241,14 +241,14 @@ The UAMI path is the modern recommended pattern. **Note for Levi9 / corporate te
     | `AZURE_WEBAPP_NAME` | your `$APP` value (e.g., `edumap-miljkovici`) |
 
   - Verify: all four visible in the Variables list
-- [ ] **Flip the deploy gate**
+- [x] **Flip the deploy gate**
   - Why: the workflow gates the deploy job on a `DEPLOY_ENABLED` repo variable so it stays green while Azure is being bootstrapped. With everything in place now, turn it on.
   - Do: same Variables tab → add `DEPLOY_ENABLED` = `true`
   - Verify: Variables tab shows 5 variables total
-- [ ] **Trigger a workflow run**
+- [x] **Trigger a workflow run**
   - Do: `git commit --allow-empty -m "kick off CI"; git push`
   - Verify: GitHub Actions tab → newest run → both `build-test` and `deploy` jobs go green
-- [ ] **Make a real change and watch it deploy**
+- [x] **Make a real change and watch it deploy**
   - Do: edit Serbia's `funFact` in `src/EduMap.Api/Data/countries.json`, commit, push
   - Verify: ~2 minutes later, refreshing the public site shows the new fun fact
 
@@ -414,9 +414,9 @@ When all of the below are ticked, you have completed the full course practical t
 
 | Week | Pass criterion | Status |
 |---|---|---|
-| 1–2 | Public App Service URL renders the map on phone + desktop. `/health` returns 200. | [ ] |
+| 1–2 | Public App Service URL renders the map on phone + desktop. `/health` returns 200. | [x] |
 | 1–2 | Log line says "Loading countries from Blob Storage…" — proves Azure SDK exercise works. | [ ] |
-| 3 | `git push` to main → GitHub Actions runs all 4 tests → site updates within 3 minutes. | [ ] |
+| 3 | `git push` to main → GitHub Actions runs all 4 tests → site updates within 3 minutes. | [x] |
 | 3 | Equivalent Azure Pipelines run goes green and deploys. You can name 2 differences vs GitHub Actions. | [ ] |
 | 4 | Container image runs locally, runs in ACR, runs in Container Apps with public FQDN. | [ ] |
 | 4 | KQL query in Log Analytics returns top-N clicked countries by ISO2. | [ ] |
